@@ -1,6 +1,6 @@
 This program implements a Topology sorting algorithm, based on Kahn's algorithm [1].
 <br>
-In this version, algorithm calculation are performed in serial.
+Two implementations are included, one executing the algorithm in serial, and one using POSIX Threads.
 <br>
 Directed Acyclic Graph(DAG) is read from an input file created by RandomGraph generator by S.Pettie and V.Ramachandran [2], using the following arguments:
 <br>
