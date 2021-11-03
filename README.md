@@ -7,8 +7,6 @@ Directed Acyclic Graph(DAG) is read from an input file created by RandomGraph ge
 ./RandomGraph directed_grph_<N> <N> 2 1 <N/2>
 <br>
 where N is the Graph nodes count we want to generate.
-
-<br>
 <br>
 References:
 <br>
