@@ -1,3 +1,4 @@
+# topology_shorting
 This program implements a Topology sorting algorithm, based on Kahn's algorithm [1].
 <br>
 Two implementations are included, one executing the algorithm in serial, and one using POSIX Threads.
