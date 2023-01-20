@@ -196,13 +196,14 @@ int read_parameters(char **argv) {
 void* initialize_queue(void* thread_id) {
     int i;
     long id = (long) thread_id;
-    node *thread_head = NULL;                    // Thread Queue head.
-    node *thread_tail = NULL;                    // Thread Queue tail.
+    node* thread_head = NULL;                    // Thread Queue head.
+    node* thread_tail = NULL;                    // Thread Queue tail.
+    node* temp_node = NULL;                      // Temporary pointer for removals.
     int interval = nodes_count / threads_count;  // Each thread will process interval nodes.
     int remainder = nodes_count % threads_count; // Remaining nodes will be distributed evenly among threads.
     int start = id * interval;
     int finish = start + interval;
-    
+
     // Process assigned nodes.
     for (i = start; i < finish; i++) {
         if (dependencies_matrix[i] != 0) {
@@ -214,7 +215,7 @@ void* initialize_queue(void* thread_id) {
             exit(0);
         }
     }
-    
+
     // Process remaining node.
     if (id < remainder) {
         i = nodes_count - id - 1;
@@ -232,13 +233,15 @@ void* initialize_queue(void* thread_id) {
     }
 
     pthread_mutex_lock(&mutex);
+
     while (thread_head != NULL) {
         if (push_value(&head, &tail, thread_head->val) == -1) {
             printf("Could not allocate memory.\n");
             exit(0);
         }
+        temp_node = thread_head->next;
         free(thread_head);
-        thread_head = thread_head->next;
+        thread_head = temp_node;
     }
     pthread_mutex_unlock(&mutex);
 
@@ -251,6 +254,7 @@ void* thread_topology_calculation() {
     int i, current_node_index;
     node* thread_head = NULL;
     node* thread_tail = NULL;
+    node* temp_node = NULL;
     
     // While not all Nodes have been sorted...
     while (topology_matrix_index != nodes_count) {
@@ -268,8 +272,9 @@ void* thread_topology_calculation() {
                         exit(0);
                     }
                 }
-                free(thread_head);        
-                thread_head = thread_head->next;
+                temp_node = thread_head->next;
+                free(thread_head);
+                thread_head = temp_node;
             }
         }
         // Retrieve global Queue head.
@@ -278,7 +283,7 @@ void* thread_topology_calculation() {
             // Insert Thread current node index to Topology matrix.
             topology_matrix[topology_matrix_index] = current_node_index;
             topology_matrix_index++;
-        }        
+        }
         pthread_mutex_unlock(&mutex);
         // Check if Thread current node dependent nodes can be pushed to local Queue.
         if (current_node_index != -1) {
@@ -302,7 +307,7 @@ void* thread_topology_calculation() {
 void calculate_topology() {
     pthread_t* tid;
     long t;
-    
+
     // Push initial nodes(0 dependencies) to Queue.
     tid = (pthread_t*)malloc(threads_count * sizeof(pthread_t));
     for (t = 0; t < threads_count; t++) {
@@ -311,7 +316,7 @@ void calculate_topology() {
     for (t = 0; t < threads_count; t++) {
         pthread_join(tid[t], NULL);
     }
-    
+
     // Calculate Topology.
     topology_matrix_index = 0;
     for (t = 0; t < threads_count; t++) {
@@ -320,7 +325,7 @@ void calculate_topology() {
     for (t = 0; t < threads_count; t++) {
         pthread_join(tid[t], NULL);
     }
-    
+
     free(matrix);
     free(dependencies_matrix);
 }

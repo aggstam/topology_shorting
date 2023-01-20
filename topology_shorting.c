@@ -66,7 +66,7 @@ int pop_value() {
         return -1;
     }
     int retval = head->val;
-    node *new_head = head->next;
+    node* new_head = head->next;
     free(head);
     if (new_head == NULL) {
         head = NULL;
