@@ -218,12 +218,11 @@ void* initialize_queue(void* thread_id) {
     // Process remaining node.
     if (id < remainder) {
         i = nodes_count - id - 1;
-        if (dependencies_matrix[i] != 0) {
-            continue;
-        }
-        if (push_value(&thread_head, &thread_tail, i) == -1) {
-            printf("Could not allocate memory.\n");
-            exit(0);
+        if (dependencies_matrix[i] == 0) {
+            if (push_value(&thread_head, &thread_tail, i) == -1) {
+                printf("Could not allocate memory.\n");
+                exit(0);
+            }
         }
     }
 
