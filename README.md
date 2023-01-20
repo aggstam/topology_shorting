@@ -65,7 +65,6 @@ Execution:
 ```
 
 <br>
-<br>
 References:
 <br>
 [1] https://en.wikipedia.org/wiki/Topological_sorting
