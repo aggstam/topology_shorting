@@ -1,5 +1,6 @@
 FILE = test_file
 OUTPUT = output
+THREADS = 4
 
 all:
 	$(info Executing normal code...)
@@ -9,7 +10,7 @@ all:
 parallel:
 	$(info Executing parallel code...)
 	gcc -o topology_shorting_parallel topology_shorting_parallel.c
-	./topology_shorting_parallel $(FILE) $(OUTPUT)
+	./topology_shorting_parallel $(THREADS) $(FILE) $(OUTPUT)
 
 clean:
 	rm -f topology_shorting topology_shorting_parallel

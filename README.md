@@ -30,6 +30,10 @@ To configure a different output file:
 ```
 % make parallel
 ```
+To configure different how many threads to use:
+```
+% make parallel THREADS={threads_count}
+```
 To include a different input file:
 ```
 % make parallel FILE={file_path}
@@ -57,7 +61,7 @@ Compilation:
 ```
 Execution:
 ```
-% ./topology_shorting_parallel {input_file} {output_file}
+% ./topology_shorting_parallel {threads_count} {input_file} {output_file}
 ```
 
 <br>
