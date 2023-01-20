@@ -19,7 +19,7 @@
 // Queue node structure.
 typedef struct node {
     int val;
-    struct node *next;
+    struct node* next;
 } node;
 
 node* head;                // Queue head node.
@@ -51,6 +51,7 @@ int push_value(int val) {
 
     tail->next = new_node;
     tail = new_node;
+
     return 0;
 }
 
@@ -73,6 +74,7 @@ int pop_value() {
     } else {
         head = new_head;    
     }
+
     return retval;
 }
 
@@ -160,6 +162,7 @@ int read_parameters(char** argv) {
     printf("Calculating Topology sorting of Graph.\n");
     printf("Graph will be retrieved from input file: %s\n", input_filename);
     printf("Topology Matrix will be written in output file: %s\n", output_filename);
+
     return 1;
 }
 
@@ -259,5 +262,6 @@ int main(int argc, char** argv) {
     fclose(fin);
     fclose(fout);
     printf("Program terminates.\n");
+
     return 0;
 }
