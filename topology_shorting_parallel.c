@@ -82,6 +82,7 @@ int pop_value(node** queue_head, node** queue_tail) {
     } else {
         *queue_head = new_head;    
     }
+    
     return retval;
 }
 
