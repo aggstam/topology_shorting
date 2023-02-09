@@ -19,24 +19,25 @@
 // Queue node structure.
 typedef struct node {
     int val;
-    struct node* next;
+    struct node *next;
 } node;
 
-node* head;                // Queue head node.
-node* tail;                // Queue tail node.
-FILE* fin;                 // Input file.
-FILE* fout;                // Output file.
-int nodes_count;           // Graph nodes count.
-int** matrix;              // Graph nodes matrix.
-int* dependencies_matrix;  // Graph nodes dependencies matrix.
-int* topology_matrix;      // Graph nodes topology matrix.
+node *head;                // Queue head node.
+node *tail;                // Queue tail node.
+FILE *fin;                 // Input file.
+FILE *fout;                // Output file.
+int  nodes_count;           // Graph nodes count.
+int **matrix;              // Graph nodes matrix.
+int *dependencies_matrix;  // Graph nodes dependencies matrix.
+int *topology_matrix;      // Graph nodes topology matrix.
 int topology_matrix_index; // Graph nodes topology matrix index.
 
 // This function inserts a given value at the end of the Queue.
 // Inputs:
 //      int val: The value to insert.
-int push_value(int val) {
-    node* new_node = (node*) malloc(sizeof(node));
+int push_value(int val)
+{
+    node *new_node = (node*) malloc(sizeof(node));
     if (new_node == NULL) {
         return -1;
     }
@@ -61,12 +62,13 @@ int push_value(int val) {
 // Output:
 //      retval --> Queue head value.
 //      -1     --> Queue is empty.
-int pop_value() {
+int pop_value()
+{
     if (head == NULL) {
         return -1;
     }
     int retval = head->val;
-    node* new_head = head->next;
+    node *new_head = head->next;
     free(head);
     if (new_head == NULL) {
         head = NULL;
@@ -82,7 +84,8 @@ int pop_value() {
 // Output:
 //      1 --> Initialized successfully.
 //      0 --> Something went wrong.
-int initialize() {
+int initialize()
+{
     int i,j,fscanf_result;
     double w;
     head = NULL;
@@ -94,7 +97,7 @@ int initialize() {
         return 0;
     }
 
-    int* ptr = (int*)(matrix + nodes_count);
+    int *ptr = (int*)(matrix + nodes_count);
     for(i = 0; i < nodes_count; i++) {
         matrix[i] = (ptr + nodes_count * i);
         dependencies_matrix[i] = 0;
@@ -116,8 +119,9 @@ int initialize() {
 
 // Auxiliary function that displays a message in case of wrong input parameters.
 // Inputs:
-//      char* compiled_name: Programs compiled name.
-void syntax_message(char* compiled_name) {
+//      char *compiled_name: Programs compiled name.
+void syntax_message(char *compiled_name)
+{
     printf("Correct syntax:\n");
     printf("%s <input-file> <output-file>\n", compiled_name);
     printf("where: \n");
@@ -132,8 +136,9 @@ void syntax_message(char* compiled_name) {
 // Output:
 //      1 --> Parameters read successfully.
 //      0 --> Something went wrong.
-int read_parameters(char** argv) {
-    char* input_filename = argv[1];
+int read_parameters(char **argv)
+{
+    char *input_filename = argv[1];
     if (input_filename == NULL) {
         printf("Input file parameter missing.\n");
         syntax_message(argv[0]);
@@ -146,7 +151,7 @@ int read_parameters(char** argv) {
         return 0;        
     }
     
-    char* output_filename = argv[2];
+    char *output_filename = argv[2];
     if (output_filename == NULL) {
         printf("Output file parameter missing.\n");
         syntax_message(argv[0]);
@@ -168,7 +173,8 @@ int read_parameters(char** argv) {
 
 // This function implements a Topology shorting algorithm,
 // based on Kahn's algorithm.
-void calculate_topology() {
+void calculate_topology()
+{
     int i, current_node_index;
     
     // Push initial nodes(0 dependencies) to Queue.
@@ -216,7 +222,8 @@ void calculate_topology() {
 // This function writes the Topology matrix to the output file.
 // First line contains the nodes count.
 // Last line contains -1 as EOF char.
-void write_topology_to_file() {
+void write_topology_to_file()
+{
     fprintf(fout, "%d\n", nodes_count);
     for (int i = 0; i < nodes_count; i++) {
         fprintf(fout, "%d\n", topology_matrix[i]);            
@@ -225,7 +232,8 @@ void write_topology_to_file() {
     free(topology_matrix);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
     // Run-time parameters check.
     if (!read_parameters(argv)) {
         printf("Program terminates.\n");

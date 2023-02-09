@@ -20,28 +20,29 @@
 // Queue node structure.
 typedef struct node {
     int val;
-    struct node* next;
+    struct node *next;
 } node;
 
-node* head;                // Queue head node.
-node* tail;                // Queue tail node.
-FILE* fin;                 // Input file.
-FILE* fout;                // Output file.
+node *head;                // Queue head node.
+node *tail;                // Queue tail node.
+FILE *fin;                 // Input file.
+FILE *fout;                // Output file.
 int nodes_count;           // Graph nodes count.
-int** matrix;              // Graph nodes matrix.
-int* dependencies_matrix;  // Graph nodes dependencies matrix.
-int* topology_matrix;      // Graph nodes topology matrix.
+int **matrix;              // Graph nodes matrix.
+int *dependencies_matrix;  // Graph nodes dependencies matrix.
+int *topology_matrix;      // Graph nodes topology matrix.
 int topology_matrix_index; // Graph nodes topology matrix index.
 int threads_count;
 pthread_mutex_t mutex;
 
 // This function inserts a given value at the end of a given Queue.
 // Inputs:
-//      node** queue_head: Queue head node.
-//      node** queue_tail: Queue tail node.
+//      node **queue_head: Queue head node.
+//      node **queue_tail: Queue tail node.
 //      int val: The value to insert.
-int push_value(node** queue_head, node** queue_tail, int val) {
-    node* new_node = (node*) malloc(sizeof(node));
+int push_value(node **queue_head, node **queue_tail, int val)
+{
+    node *new_node = (node*) malloc(sizeof(node));
     if (new_node == NULL) {
         return -1;
     }
@@ -64,17 +65,18 @@ int push_value(node** queue_head, node** queue_tail, int val) {
 // It will also move the head of the Queue to the next
 // node, if it exists.
 // Inputs:
-//      node** queue_head: Queue head node.
-//      node** queue_tail: Queue tail node.
+//      node **queue_head: Queue head node.
+//      node **queue_tail: Queue tail node.
 // Output:
 //      retval --> Queue head value.
 //      -1     --> Queue is empty.
-int pop_value(node** queue_head, node** queue_tail) {
+int pop_value(node **queue_head, node **queue_tail)
+{
     if (*queue_head == NULL) {
         return -1;
     }
     int retval = (*queue_head)->val;
-    node* new_head = (*queue_head)->next;
+    node *new_head = (*queue_head)->next;
     free(*queue_head);
     if (new_head == NULL) {
         *queue_head = NULL;
@@ -90,7 +92,8 @@ int pop_value(node** queue_head, node** queue_tail) {
 // Output:
 //      1 --> Initialized successfully.
 //      0 --> Something went wrong.
-int initialize() {
+int initialize()
+{
     int i,j,fscanf_result;
     double w;
     head = NULL;
@@ -102,7 +105,7 @@ int initialize() {
         return 0;
     }
 
-    int* ptr = (int*)(matrix + nodes_count);
+    int *ptr = (int*)(matrix + nodes_count);
     for(i = 0; i < nodes_count; i++) {
         matrix[i] = (ptr + nodes_count * i);
         dependencies_matrix[i] = 0;
@@ -124,8 +127,9 @@ int initialize() {
 
 // Auxiliary function that displays a message in case of wrong input parameters.
 // Inputs:
-//      char* compiled_name: Programs compiled name.
-void syntax_message(char* compiled_name) {
+//      char *compiled_name: Programs compiled name.
+void syntax_message(char *compiled_name)
+{
     printf("Correct syntax:\n");
     printf("%s <threads_count> <input-file> <output-file>\n", compiled_name);
     printf("where: \n");
@@ -137,12 +141,13 @@ void syntax_message(char* compiled_name) {
 // This function checks run-time parameters validity and
 // retrieves Threads count value, input and output file names.
 // Inputs:
-//      char** argv: The run-time parameters.
+//      char **argv: The run-time parameters.
 // Output:
 //      1 --> Parameters read successfully.
 //      0 --> Something went wrong.
-int read_parameters(char **argv) {
-    char* threads_count_string = argv[1];
+int read_parameters(char **argv)
+{
+    char *threads_count_string = argv[1];
     if (threads_count_string == NULL) {
         printf("Threads count parameter missing.\n");
         syntax_message(argv[0]);
@@ -156,7 +161,7 @@ int read_parameters(char **argv) {
         return 0;
     }
 
-    char* input_filename = argv[2];
+    char *input_filename = argv[2];
     if (input_filename == NULL) {
         printf("Input file parameter missing.\n");
         syntax_message(argv[0]);
@@ -169,7 +174,7 @@ int read_parameters(char **argv) {
         return 0;        
     }
 
-    char* output_filename = argv[3];
+    char *output_filename = argv[3];
     if (output_filename == NULL) {
         printf("Output file parameter missing.\n");
         syntax_message(argv[0]);
@@ -193,13 +198,14 @@ int read_parameters(char **argv) {
 // This Thread function pushes initial nodes(0 dependencies) to Queue.
 // Each Thread uses a local Queue, in order to minimize mutex usage.
 // Inputs:
-//      void* thread_id: The Thread ID.
-void* initialize_queue(void* thread_id) {
+//      void *thread_id: The Thread ID.
+void *initialize_queue(void *thread_id)
+{
     int i;
     long id = (long) thread_id;
-    node* thread_head = NULL;                    // Thread Queue head.
-    node* thread_tail = NULL;                    // Thread Queue tail.
-    node* temp_node = NULL;                      // Temporary pointer for removals.
+    node *thread_head = NULL;                    // Thread Queue head.
+    node *thread_tail = NULL;                    // Thread Queue tail.
+    node *temp_node = NULL;                      // Temporary pointer for removals.
     int interval = nodes_count / threads_count;  // Each thread will process interval nodes.
     int remainder = nodes_count % threads_count; // Remaining nodes will be distributed evenly among threads.
     int start = id * interval;
@@ -251,11 +257,12 @@ void* initialize_queue(void* thread_id) {
 
 // This Thread function calculates the nodes Topology.
 // Each Thread uses a local Queue, in order to minimize mutex usage.
-void* thread_topology_calculation() {
+void *thread_topology_calculation()
+{
     int i, current_node_index;
-    node* thread_head = NULL;
-    node* thread_tail = NULL;
-    node* temp_node = NULL;
+    node *thread_head = NULL;
+    node *thread_tail = NULL;
+    node *temp_node = NULL;
     
     // While not all Nodes have been sorted...
     while (topology_matrix_index != nodes_count) {
@@ -305,8 +312,9 @@ void* thread_topology_calculation() {
 
 // This function implements a parallel Topology shorting algorithm,
 // based on Kahn's algorithm.
-void calculate_topology() {
-    pthread_t* tid;
+void calculate_topology()
+{
+    pthread_t *tid;
     long t;
 
     // Push initial nodes(0 dependencies) to Queue.
@@ -334,7 +342,8 @@ void calculate_topology() {
 // This function writes the Topology matrix to the output file.
 // First line contains the nodes count.
 // Last line contains -1 as EOF char.
-void write_topology_to_file() {
+void write_topology_to_file()
+{
     fprintf(fout, "%d\n", nodes_count);
     for (int i = 0; i < nodes_count; i++) {
         fprintf(fout, "%d\n", topology_matrix[i]);            
@@ -343,7 +352,8 @@ void write_topology_to_file() {
     free(topology_matrix);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
     // Run-time parameters check.
     if (!read_parameters(argv)) {
         printf("Program terminates.\n");
