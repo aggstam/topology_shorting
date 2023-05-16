@@ -14,3 +14,5 @@ parallel:
 
 clean:
 	rm -f topology_shorting topology_shorting_parallel
+
+.PHONY: all parallel clean

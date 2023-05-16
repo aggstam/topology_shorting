@@ -64,6 +64,42 @@ Execution:
 % ./topology_shorting_parallel {threads_count} {input_file} {output_file}
 ```
 
+## Execution examples
+### Normal code
+```
+❯ make
+Executing normal code...
+gcc -o topology_shorting topology_shorting.c
+./topology_shorting test_file output
+Calculating Topology sorting of Graph.
+Graph will be retrieved from input file: test_file
+Topology Matrix will be written in output file: output
+Nodes count: 100
+Algorithm started, please wait...
+Algorithm finished!
+Time spend: 0.000043 secs
+Writing Topology Matrix to output file.
+Program terminates.
+```
+
+### Parallel code
+```
+❯ make parallel
+Executing parallel code...
+gcc -o topology_shorting_parallel topology_shorting_parallel.c
+./topology_shorting_parallel 4 test_file output
+Calculating Topology sorting of Graph.
+Threads that will be used: 4
+Graph will be retrieved from input file: test_file
+Topology Matrix will be written in output file: output
+Nodes count: 100
+Algorithm started, please wait...
+Algorithm finished!
+Time spend: 0.001094 secs
+Writing Topology Matrix to output file.
+Program terminates.
+```
+
 ## References
 [1] https://en.wikipedia.org/wiki/Topological_sorting
 <br>
